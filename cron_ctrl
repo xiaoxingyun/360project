@@ -1,0 +1,33 @@
+#!/bin/bash
+
+USER='root'
+cron_file="/var/spool/cron/$USER"
+jobname="$1"
+
+start() {
+  sed -i "/$jobname/ s/^#//" $cron_file
+}
+
+stop() {
+  sed -i "/$jobname/ s/^/#/" $cron_file
+}
+
+case $2 in
+--start)
+  start $jobname
+;;
+--stop)
+  stop $jobname
+;;
+--list)
+  crontab -u $USER -l
+;;
+*)
+  echo "Usage: $0 jobname {--list|--start|--stop}"
+;;
+esac
+
+##----------test file---------------------
+# cat /var/spool/cron/root 
+#22 8 8 8 * /root/111.sh
+#22 8 8 8 * /root/333.sh
