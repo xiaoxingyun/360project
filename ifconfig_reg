@@ -1,0 +1,14 @@
+#!/bin/bash
+
+niclist="./nic_file"
+
+[ -x $niclist ] && rm -fr $niclist
+ip a | egrep '^[0-9]:' | grep -v lo | awk -F : '{print $2}' > $niclist
+for nic in $niclist
+do
+  ip=$(ifconfig $nic |  awk -F '[ :]+' '/inet / {print $4}')
+  echo $nic:$ip
+done
+
+exit 0
+
